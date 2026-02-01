@@ -4,7 +4,7 @@ openai
 yt-dlp
 ffmpeg-python
 python-dotenv
-neo-api-client
+
 yfinance
 pandas
 watchdog
