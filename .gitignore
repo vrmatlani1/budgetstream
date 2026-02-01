@@ -24,10 +24,9 @@ wheels/
 
 # Streamlit
 .streamlit/
-! .streamlit/secrets.toml  # Don't commit secrets usually, but user might want config. secrets.toml should definitely be ignored if it has real keys. user just put key in settings.json.
 
 # App specific
 budget_stream.db
-settings.json # Contains API Key! Should be ignored.
+settings.json
 .env
 .DS_Store
