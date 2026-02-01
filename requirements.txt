@@ -1,0 +1,10 @@
+streamlit>=1.30.0
+deepgram-sdk>=3.0.0
+openai
+yt-dlp
+ffmpeg-python
+python-dotenv
+neo-api-client
+yfinance
+pandas
+watchdog

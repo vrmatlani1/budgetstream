@@ -1,0 +1,33 @@
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Streamlit
+.streamlit/
+! .streamlit/secrets.toml  # Don't commit secrets usually, but user might want config. secrets.toml should definitely be ignored if it has real keys. user just put key in settings.json.
+
+# App specific
+budget_stream.db
+settings.json # Contains API Key! Should be ignored.
+.env
+.DS_Store
