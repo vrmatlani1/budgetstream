@@ -75,7 +75,13 @@ def load_settings():
     return {}
 
 SETTINGS = load_settings()
+# Try settings.json -> env var -> st.secrets
 OPENAI_API_KEY = SETTINGS.get("openai_api_key") or os.getenv("OPENAI_API_KEY")
+if not OPENAI_API_KEY:
+    try:
+        OPENAI_API_KEY = st.secrets["openai"]["api_key"]
+    except:
+        pass
 
 def get_video_id():
     url = SETTINGS.get("youtube_url", "https://www.youtube.com/watch?v=sFr7cwzFfts")
