@@ -84,10 +84,10 @@ if not OPENAI_API_KEY:
         pass
 
 def get_video_id():
-    url = SETTINGS.get("youtube_url", "https://www.youtube.com/watch?v=lX61pOTyqF0")
+    url = SETTINGS.get("youtube_url", "https://www.youtube.com/watch?v=EFBgPGe0XSI")
     if "v=" in url:
         return url.split("v=")[1].split("&")[0]
-    return "lX61pOTyqF0"
+    return "EFBgPGe0XSI"
 
 # --- PRICE ENGINE (Subprocess Safe) ---
 class PriceEngine:
