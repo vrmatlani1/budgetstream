@@ -37,6 +37,10 @@ def init_db():
                  sector TEXT,
                  timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
                  )''')
+    c.execute('''CREATE TABLE IF NOT EXISTS visitors (
+                 id INTEGER PRIMARY KEY AUTOINCREMENT,
+                 timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+                 )''')
     conn.commit()
     conn.close()
 
@@ -46,6 +50,21 @@ def save_transcript(text: str):
     c.execute("INSERT INTO transcript (text) VALUES (?)", (text,))
     conn.commit()
     conn.close()
+
+def log_visit():
+    conn = sqlite3.connect(DB_FILE)
+    c = conn.cursor()
+    c.execute("INSERT INTO visitors DEFAULT VALUES")
+    conn.commit()
+    conn.close()
+
+def get_visitor_count():
+    conn = sqlite3.connect(DB_FILE)
+    c = conn.cursor()
+    c.execute("SELECT COUNT(*) FROM visitors")
+    count = c.fetchone()[0]
+    conn.close()
+    return count
 
 def save_insight(ticker: str, sentiment: str, reason: str, sector: str):
     conn = sqlite3.connect(DB_FILE)
@@ -182,6 +201,7 @@ def analyze_text(text: str):
 def render_admin():
     """Secure Admin Panel"""
     st.markdown("### 🔒 Budget Stream Console")
+    st.metric("Total Visitors", get_visitor_count())
     
     # Simple Auth State
     if "is_admin" not in st.session_state:
@@ -347,6 +367,11 @@ def render_viewer():
 # --- MAIN ---
 def main():
     init_db()
+    
+    # Track Visitor
+    if "visitor_logged" not in st.session_state:
+        log_visit()
+        st.session_state.visitor_logged = True
     
     with st.sidebar:
         st.title("Navigation")
