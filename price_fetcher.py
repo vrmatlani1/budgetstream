@@ -9,16 +9,18 @@ def get_price(ticker):
     try:
         # Check if it's an index or stock
         t = yf.Ticker(ticker)
-        data = t.history(period="1d")
+        # Fetch 5 days to be safe over weekends/holidays
+        data = t.history(period="5d")
         if not data.empty:
-            # We want Close, Open for indices, just Close for stock
-            close_price = data['Close'].iloc[-1]
-            try:
-                open_price = data['Open'].iloc[0]
-            except:
-                open_price = close_price
+            current_price = data['Close'].iloc[-1]
             
-            print(f"{close_price}|{open_price}")
+            # Get previous close for pct change
+            if len(data) >= 2:
+                prev_close = data['Close'].iloc[-2]
+            else:
+                prev_close = data['Open'].iloc[0]
+            
+            print(f"{current_price}|{prev_close}")
         else:
             print("NaN|NaN")
     except Exception as e:

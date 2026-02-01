@@ -124,9 +124,11 @@ class PriceEngine:
             try:
                 import subprocess
                 import sys
+                import random
+                # Add random arg to ensure no OS-level caching if any (though unlikely for subprocess)
                 result = subprocess.run(
                     [sys.executable, "price_fetcher.py", ticker], 
-                    capture_output=True, text=True, timeout=5
+                    capture_output=True, text=True, timeout=8
                 )
                 output = result.stdout.strip()
                 if output:
@@ -140,10 +142,12 @@ class PriceEngine:
                         pct = (change / prev) * 100
                         results[name] = {"price": val, "change": change, "pct": pct}
                     else:
-                        results[name] = {"price": 0.0, "change": 0.0, "pct": 0.0}
+                        # Fallback if parse fails but keeping structure
+                         results[name] = {"price": 0.0, "change": 0.0, "pct": 0.0}
                 else:
                     results[name] = {"price": 0.0, "change": 0.0, "pct": 0.0}
-            except:
+            except Exception as e:
+                print(f"Error fetching {name}: {e}")
                 results[name] = {"price": 0.0, "change": 0.0, "pct": 0.0}
         return results
 
