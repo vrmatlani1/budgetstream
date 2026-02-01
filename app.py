@@ -216,53 +216,58 @@ def render_admin():
 def render_viewer():
     """Clean Viewer UI"""
     
-    # 1. Header (Indices)
-    indices = PriceEngine.get_market_indices()
     
-    # Custom Header
-    st.markdown("""
-        <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid #eee;">
-            <div>
-                <div style="display: flex; align-items: center; gap: 15px;">
-                    <h1 style="margin: 0; padding: 0; color: #1a73e8;">BudgetStream - 2026</h1>
-                    <div style="
-                        background-color: #ff4444; 
-                        color: white; 
-                        padding: 5px 10px; 
-                        border-radius: 4px; 
-                        font-weight: bold; 
-                        font-size: 0.8em; 
-                        animation: pulse 2s infinite;
-                        box-shadow: 0 0 10px rgba(255,68,68,0.5);
-                    ">
-                        ● LIVE
+    # 1. Header (Indices) - Wrapped in Fragment for Auto-Refresh
+    @st.fragment(run_every=5)
+    def render_header():
+        indices = PriceEngine.get_market_indices()
+        
+        # Custom Header
+        st.markdown("""
+            <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid #eee;">
+                <div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <h1 style="margin: 0; padding: 0; color: #1a73e8;">BudgetStream - 2026</h1>
+                        <div style="
+                            background-color: #ff4444; 
+                            color: white; 
+                            padding: 5px 10px; 
+                            border-radius: 4px; 
+                            font-weight: bold; 
+                            font-size: 0.8em; 
+                            animation: pulse 2s infinite;
+                            box-shadow: 0 0 10px rgba(255,68,68,0.5);
+                        ">
+                            ● LIVE
+                        </div>
+                    </div>
+                    <div style="margin-top: 5px; font-size: 0.9em; color: #555;">
+                        Developed By <a href="https://linkedin.com/in/varunmatlani" target="_blank" style="color: #1a73e8; text-decoration: none; font-weight: bold;">Varun Matlani</a>
                     </div>
                 </div>
-                <div style="margin-top: 5px; font-size: 0.9em; color: #555;">
-                    Developed By <a href="https://linkedin.com/in/varunmatlani" target="_blank" style="color: #1a73e8; text-decoration: none; font-weight: bold;">Varun Matlani</a>
-                </div>
+                <style>
+                    @keyframes pulse {
+                        0% { opacity: 1; transform: scale(1); }
+                        50% { opacity: 0.8; transform: scale(1.05); }
+                        100% { opacity: 1; transform: scale(1); }
+                    }
+                </style>
             </div>
-            <style>
-                @keyframes pulse {
-                    0% { opacity: 1; transform: scale(1); }
-                    50% { opacity: 0.8; transform: scale(1.05); }
-                    100% { opacity: 1; transform: scale(1); }
-                }
-            </style>
-        </div>
-    """, unsafe_allow_html=True)
-    
-    col1, col2, col3 = st.columns([5, 2, 2])
-    with col1:
-        pass # Spacer
-    with col2:
-        nifty = indices["NIFTY 50"]
-        st.metric("NIFTY 50", f"₹{nifty['price']:,.0f}", f"{nifty['pct']:.2f}%")
-    with col3:
-        sensex = indices["SENSEX"]
-        st.metric("SENSEX", f"₹{sensex['price']:,.0f}", f"{sensex['pct']:.2f}%")
-    
-    st.divider()
+        """, unsafe_allow_html=True)
+        
+        col1, col2, col3 = st.columns([5, 2, 2])
+        with col1:
+            pass # Spacer
+        with col2:
+            nifty = indices["NIFTY 50"]
+            st.metric("NIFTY 50", f"₹{nifty['price']:,.0f}", f"{nifty['pct']:.2f}%")
+        with col3:
+            sensex = indices["SENSEX"]
+            st.metric("SENSEX", f"₹{sensex['price']:,.0f}", f"{sensex['pct']:.2f}%")
+        
+        st.divider()
+
+    render_header()
 
     # 2. Ticker Tape (Simple HTML)
     # Using a simple marquee for safety and robustness
