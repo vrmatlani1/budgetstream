@@ -182,7 +182,11 @@ def render_admin():
             uid = st.text_input("User ID")
             pwd = st.text_input("Password", type="password")
             if st.form_submit_button("Enter Console"):
-                if uid == "varun@emh.capital" and pwd == "#anagram2311":
+                # Use secrets for auth
+                valid_uid = st.secrets["admin"]["username"]
+                valid_pwd = st.secrets["admin"]["password"]
+                
+                if uid == valid_uid and pwd == valid_pwd:
                     st.session_state.is_admin = True
                     st.rerun()
                 else:
